@@ -1,0 +1,224 @@
+.sliderWrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  position: relative;
+  background: linear-gradient(135deg, rgba(25, 118, 210, 0.1), rgba(0, 0, 0, 0.1));
+  backdrop-filter: blur(10px);
+}
+
+.slider {
+  position: relative;
+}
+
+/* Custom Navigation Arrows */
+.slider :global(.slick-prev),
+.slider :global(.slick-next) {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.slider :global(.slick-prev):hover,
+.slider :global(.slick-next):hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.slider :global(.slick-prev) {
+  left: 20px;
+}
+
+.slider :global(.slick-next) {
+  right: 20px;
+}
+
+.slider :global(.slick-prev:before),
+.slider :global(.slick-next:before) {
+  font-size: 20px;
+  color: #1976d2;
+  opacity: 1;
+}
+
+/* Custom Dots Container */
+.slider :global(.slick-dots) {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex !important;
+  gap: 12px;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  width: auto;
+  max-width: 90%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.slider :global(.slick-dots::-webkit-scrollbar) {
+  display: none;
+}
+
+.slider :global(.slick-dots li) {
+  width: auto;
+  height: auto;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.slider :global(.slick-dots li button) {
+  width: auto;
+  height: auto;
+  padding: 0;
+  border: none;
+  background: none;
+}
+
+.slider :global(.slick-dots li button:before) {
+  display: none;
+}
+
+.customDot {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dotThumbnail {
+  width: 60px;
+  height: 40px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.slider :global(.slick-dots li.slick-active) .dotThumbnail {
+  border-color: #1976d2;
+  transform: scale(1.1);
+  box-shadow: 0 4px 15px rgba(25, 118, 210, 0.4);
+}
+
+.dotImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.3s ease;
+}
+
+.videoDot {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #1976d2, #42a5f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.slider :global(.slick-dots li.slick-active) .videoDot {
+  background: linear-gradient(135deg, #0d47a1, #1976d2);
+}
+
+.slide {
+  width: 100%;
+  height: 600px;
+  position: relative;
+  background: linear-gradient(135deg, #000, #1a1a1a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Hover Effects */
+.sliderWrapper:hover .image,
+.sliderWrapper:hover .video {
+  transform: scale(1.02);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sliderWrapper {
+    margin: 20px;
+    border-radius: 16px;
+  }
+  
+  .slide {
+    height: 400px;
+  }
+  
+  .slider :global(.slick-prev),
+  .slider :global(.slick-next) {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .slider :global(.slick-prev) {
+    left: 10px;
+  }
+  
+  .slider :global(.slick-next) {
+    right: 10px;
+  }
+  
+  .slider :global(.slick-dots) {
+    bottom: 15px;
+    gap: 8px;
+    padding: 8px 16px;
+  }
+  
+  .dotThumbnail {
+    width: 50px;
+    height: 35px;
+  }
+}
+
+@media (max-width: 480px) {
+  .slide {
+    height: 300px;
+  }
+  
+  .dotThumbnail {
+    width: 45px;
+    height: 30px;
+  }
+  
+  .slider :global(.slick-dots) {
+    gap: 6px;
+    padding: 6px 12px;
+  }
+}
