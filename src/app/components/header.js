@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import * as React from 'react';
 import {
   AppBar,
@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
+import { useRouter } from 'next/navigation';
 import {
   Home,
   Info,
@@ -30,13 +31,29 @@ import {
 } from '@mui/icons-material';
 import SchizoLogo from './Logo';
 
+const pages = [
+  { name: 'Home', icon: Home, path: '/' },
+  { name: 'About Us', icon: Info, path: '/inProgress' },
+  { name: 'Services', icon: Build, path: '/inProgress' },
+  { name: 'Products', icon: Work, path: '/products' },
+  { name: 'Art', icon: Palette, path: '/inProgress' },
+  { name: 'Career', icon: People, path: '/inProgress' },
+  { name: 'Contact', icon: ContactMail, path: '/inProgress' }
+];
+
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
-  background: 'linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 100%)',
-  backdropFilter: 'blur(20px)',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+  background: 'transparent',
+  backdropFilter: 'blur(10px)',
+  boxShadow: 'none',
   borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
   transition: 'all 0.3s ease',
+  position: 'fixed',
+  width: '100%',
+  zIndex: theme.zIndex.drawer + 1,
   '&:hover': {
+    background: 'linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 100%)',
     boxShadow: '0 12px 40px rgba(0, 0, 0, 0.15)',
   }
 }));
@@ -126,7 +143,7 @@ const NavButton = styled(Button)(({ theme }) => ({
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     background: 'linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 100%)',
-    backdropFilter: 'blur(20px)',
+    backdropFilter: 'blur(px)',
     borderRadius: '15px',
     border: '1px solid rgba(255, 255, 255, 0.1)',
     boxShadow: '0 20px 60px rgba(0, 0, 0, 0.2)',
@@ -148,19 +165,6 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   }
 }));
 
-const StyledAvatar = styled(Avatar)(({ theme }) => ({
-  width: '45px',
-  height: '45px',
-  border: '2px solid transparent',
-  background: 'linear-gradient(45deg, #667eea 30%, #764ba2 90%)',
-  transition: 'all 0.3s ease',
-  cursor: 'pointer',
-  '&:hover': {
-    transform: 'scale(1.1)',
-    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.4)',
-  }
-}));
-
 const MobileMenuButton = styled(IconButton)(({ theme }) => ({
   color: '#ecf0f1',
   backgroundColor: 'rgba(255, 255, 255, 0.1)',
@@ -173,23 +177,26 @@ const MobileMenuButton = styled(IconButton)(({ theme }) => ({
   }
 }));
 
-const pages = [
-  { name: 'Home', icon: Home },
-  { name: 'About Us', icon: Info },
-  { name: 'Services', icon: Build },
-  { name: 'Portfolio', icon: Work },
-  { name: 'Art', icon: Palette },
-  { name: 'Career', icon: People },
-  { name: 'Contact', icon: ContactMail }
-];
-
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
-
 function Navbar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [scrolled, setScrolled] = React.useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const router = useRouter();
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -207,19 +214,31 @@ function Navbar() {
     setAnchorElUser(null);
   };
 
+  const handleNavigation = (path) => {
+    handleCloseNavMenu();
+    router.push(path);
+  };
+
   return (
-    <StyledAppBar position="static" elevation={0}>
+    <StyledAppBar 
+      position="fixed" 
+      elevation={0}
+      sx={{
+        background: scrolled 
+          ? 'linear-gradient(135deg, rgba(44, 62, 80, 0.95) 0%, rgba(52, 73, 94, 0.95) 100%)' 
+          : 'transparent',
+        boxShadow: scrolled ? '0 8px 32px rgba(0, 0, 0, 0.1)' : 'none',
+        transition: 'all 0.3s ease',
+      }}
+    >
       <Container maxWidth="xl">
         <StyledToolbar disableGutters>
           {/* Logo Section */}
-          <LogoContainer sx={{ display: { xs: "none", md: "flex" } }}>
+          <LogoContainer 
+            sx={{ display: { xs: "none", md: "flex" } }}
+            onClick={() => handleNavigation('/')}
+          >
             <SchizoLogo />
-            {/* <LogoIcon>
-              <Home sx={{ color: 'white', fontSize: '24px' }} />
-            </LogoIcon>
-            <LogoText variant="h6" component="a" href="/">
-              DESIGN
-            </LogoText> */}
           </LogoContainer>
 
           {/* Mobile Menu */}
@@ -252,7 +271,10 @@ function Navbar() {
               {pages.map((page) => {
                 const IconComponent = page.icon;
                 return (
-                  <StyledMenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <StyledMenuItem 
+                    key={page.name} 
+                    onClick={() => handleNavigation(page.path)}
+                  >
                     <IconComponent sx={{ mr: 2, fontSize: "20px" }} />
                     <Typography>{page.name}</Typography>
                   </StyledMenuItem>
@@ -264,6 +286,7 @@ function Navbar() {
           {/* Mobile Logo */}
           <LogoContainer
             sx={{ display: { xs: "flex", md: "none" }, flexGrow: 1 }}
+            onClick={() => handleNavigation('/')}
           >
             <LogoIcon>
               <Home sx={{ color: "white", fontSize: "20px" }} />
@@ -282,7 +305,10 @@ function Navbar() {
             }}
           >
             {pages.map((page) => (
-              <NavButton key={page.name} onClick={handleCloseNavMenu}>
+              <NavButton 
+                key={page.name} 
+                onClick={() => handleNavigation(page.path)}
+              >
                 {page.name}
               </NavButton>
             ))}
@@ -290,16 +316,6 @@ function Navbar() {
 
           {/* User Menu */}
           <Box sx={{ flexGrow: 0 }}>
-            {/* <Tooltip title="Open settings" arrow>
-              <Box>
-                <StyledAvatar
-                  onClick={handleOpenUserMenu}
-                  alt="User Profile"
-                  src="/static/images/avatar/2.jpg"
-                />
-              </Box>
-            </Tooltip> */}
-
             <Tooltip title="Open settings" arrow>
               <IconButton onClick={handleOpenUserMenu}>
                 <AccountCircle sx={{ fontSize: 40 }} />
